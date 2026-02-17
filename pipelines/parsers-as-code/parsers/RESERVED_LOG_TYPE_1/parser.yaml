@@ -12,11 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- events:
-    - event:
-        metadata:
-          description: Thi
-          eventTimestamp: '2025-07-01T20:59:13Z'
-          eventType: GENERIC_EVENT
-          logType: NIX_SYSTEM
-          vendorName: ACME Labs
+log_type: RESERVED_LOG_TYPE_1
+parser:
+  type: CUSTOM
+  cbn: parser.conf
+parser_extension:
+  cbn: parser_extension.conf

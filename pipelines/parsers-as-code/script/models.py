@@ -17,6 +17,12 @@ from dataclasses import dataclass
 from enum import Enum
 
 
+class ParserType(Enum):
+    """Represents the type of parser."""
+    CUSTOM = "CUSTOM"
+    PREBUILT = "PREBUILT"
+
+
 @dataclass
 class LogTypeConfig:
     """Represents a local parser configuration for a specific log type."""
@@ -24,13 +30,35 @@ class LogTypeConfig:
     dir_path: str
     parser: str | None = None
     parser_ext: str | None = None
-    parser_type: str = "CUSTOM"  # "CUSTOM" or "PREBUILT"
+    parser_type: ParserType = ParserType.CUSTOM
+    parser_config_dict: dict | None = None
+
+
+class Operation(Enum):
+    """Represents the planned action for a parser or extension."""
+    NONE = "NONE"
+    CREATE = "CREATE"
+    UPDATE = "UPDATE"
+    RELEASE = "RELEASE"
+
+
+@dataclass
+class ParserDeploymentPlan:
+    """Represents the planned deployment operations for a log type."""
+    config: LogTypeConfig
+    parser_operation: Operation = Operation.NONE
+    parser_ext_operation: Operation = Operation.NONE
+    validation_failed: bool = False
+    comparison_report: str | None = None
+    parser_validation_status: str | None = None
+    parser_ext_validation_status: str | None = None
 
 
 class ParserState(Enum):
     """Represents the state of a parser in Chronicle."""
     ACTIVE = "ACTIVE"
     INACTIVE = "INACTIVE"
+    RELEASE_CANDIDATE = "RELEASE_CANDIDATE"
 
 
 class ParserExtensionState(Enum):
@@ -45,13 +73,6 @@ class ParserValidationStatus(Enum):
     PASSED = "PASSED"
     FAILED = "FAILED"
     INCOMPLETE = "INCOMPLETE"
-
-
-class Operation(Enum):
-    """Represents the planned action for a parser or extension."""
-    NONE = "NONE"
-    CREATE = "CREATE"
-    UPDATE = "UPDATE"
 
 
 class ParserError(Exception):
